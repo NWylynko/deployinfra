@@ -1,6 +1,6 @@
 # @deployinfra/aws
 
-AWS Amplify Hosting provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+AWS Amplify Hosting provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 Manual zip deploys (no Git connection required). Uses `@aws-sdk/client-amplify`
 and the SDK default credential chain when `credentials` is omitted.

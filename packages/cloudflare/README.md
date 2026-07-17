@@ -1,6 +1,6 @@
 # @deployinfra/cloudflare
 
-Cloudflare Pages provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Cloudflare Pages provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 ```ts
 import { createDeployer } from '@deployinfra/sdk'

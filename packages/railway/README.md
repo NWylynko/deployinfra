@@ -1,6 +1,6 @@
 # @deployinfra/railway
 
-Railway provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Railway provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 ```ts
 import { createDeployer } from '@deployinfra/sdk'

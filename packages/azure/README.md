@@ -1,6 +1,6 @@
 # @deployinfra/azure
 
-Azure App Service provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Azure App Service provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 Zip deploy via Kudu **OneDeploy** (`POST /api/publish?type=zip&async=true`).
 Supports publish-profile basic auth or Entra (`@azure/identity`) credentials.

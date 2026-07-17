@@ -1,6 +1,6 @@
 # @deployinfra/vercel
 
-Vercel provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Vercel provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 ```ts
 import { createDeployer } from '@deployinfra/sdk'

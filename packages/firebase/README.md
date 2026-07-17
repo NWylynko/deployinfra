@@ -1,6 +1,6 @@
 # @deployinfra/firebase
 
-Firebase Hosting provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Firebase Hosting provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 Deploys via the Hosting REST API (`v1beta1`): gzip + SHA-256 file protocol,
 finalize, and synchronous release.

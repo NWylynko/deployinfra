@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deployinfra/deploy-sdk.git",
+    "url": "git+https://github.com/NWylynko/deployinfra.git",
     "directory": "packages/firebase"
   },
-  "homepage": "https://github.com/deployinfra/deploy-sdk/tree/main/packages/firebase#readme",
+  "homepage": "https://github.com/NWylynko/deployinfra/tree/main/packages/firebase#readme",
   "bugs": {
-    "url": "https://github.com/deployinfra/deploy-sdk/issues"
+    "url": "https://github.com/NWylynko/deployinfra/issues"
   },
   "keywords": [
     "deploy",

@@ -1,6 +1,6 @@
 # @deployinfra/netlify
 
-Netlify provider for [DeployInfra](https://github.com/deployinfra/deploy-sdk).
+Netlify provider for [DeployInfra](https://github.com/NWylynko/deployinfra).
 
 ```ts
 import { createDeployer } from '@deployinfra/sdk'
