@@ -238,4 +238,16 @@ describe('vercel provider', () => {
       vercel({ token: 'bad' }).deploy(fromFiles({ 'a.txt': '1' }), { name: 'a' }),
     ).rejects.toBeInstanceOf(AuthError)
   })
+
+  it('deleteProject DELETEs /v9/projects/:id', async () => {
+    let deleted: string | null = null
+    server.use(
+      http.delete(`${API}/v9/projects/:id`, ({ params }) => {
+        deleted = String(params['id'])
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+    await vercel({ token: 't' }).deleteProject('my-app')
+    expect(deleted).toBe('my-app')
+  })
 })

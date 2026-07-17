@@ -12,20 +12,15 @@
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "example": "pnpm --filter deployinfra-example run deploy --",
-    "e2e:vercel": "pnpm exec tsx e2e/vercel.ts",
-    "e2e:netlify": "pnpm exec tsx e2e/netlify.ts",
-    "e2e:cloudflare": "pnpm exec tsx e2e/cloudflare.ts",
-    "e2e:railway": "pnpm exec tsx e2e/railway.ts",
-    "e2e:aws": "pnpm exec tsx e2e/aws.ts",
-    "e2e:firebase": "pnpm exec tsx e2e/firebase.ts",
-    "e2e:azure": "pnpm exec tsx e2e/azure.ts",
+    "test:e2e": "vitest run --config e2e/vitest.config.ts",
+    "test:e2e:full": "DEPLOYINFRA_E2E_PROFILE=full vitest run --config e2e/vitest.config.ts",
+    "test:e2e:source": "vitest run --config e2e/vitest.config.ts e2e/source-contract.e2e.test.ts",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.1",
     "@deployinfra/aws": "workspace:*",
-    "@deployinfra/azure": "workspace:*",
     "@deployinfra/cloudflare": "workspace:*",
     "@deployinfra/firebase": "workspace:*",
     "@deployinfra/sdk": "workspace:*",
@@ -33,8 +28,10 @@
     "@deployinfra/railway": "workspace:*",
     "@deployinfra/vercel": "workspace:*",
     "@types/node": "^26.1.1",
+    "fflate": "^0.8.3",
     "tsx": "^4.20.5",
     "turbo": "^2.10.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   }
 }

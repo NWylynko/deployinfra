@@ -297,4 +297,19 @@ describe('cloudflare provider', () => {
       }).deploy(many, { name: PROJECT }),
     ).rejects.toBeInstanceOf(ValidationError)
   })
+
+  it('deleteProject DELETEs the Pages project', async () => {
+    let deleted: string | null = null
+    server.use(
+      http.delete(
+        `${API}/accounts/${ACCOUNT}/pages/projects/:name`,
+        ({ params }) => {
+          deleted = String(params['name'])
+          return HttpResponse.json({ success: true, result: null })
+        },
+      ),
+    )
+    await cloudflare({ token: 't', accountId: ACCOUNT }).deleteProject(PROJECT)
+    expect(deleted).toBe(PROJECT)
+  })
 })

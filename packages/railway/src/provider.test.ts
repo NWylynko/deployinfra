@@ -265,4 +265,21 @@ describe('railway provider', () => {
     expect(result.deploymentId).toBe('dep_g')
     expect(serviceCreates).toBeGreaterThanOrEqual(2)
   })
+
+  it('deleteProject calls projectDelete mutation', async () => {
+    let deletedId: string | null = null
+    server.use(
+      http.post(GQL, async ({ request }) => {
+        const body = (await request.json()) as {
+          query?: string
+          variables?: { id?: string }
+        }
+        expect(body.query).toContain('projectDelete')
+        deletedId = body.variables?.id ?? null
+        return HttpResponse.json({ data: { projectDelete: true } })
+      }),
+    )
+    await railway({ token: 'tok' }).deleteProject('prj_x')
+    expect(deletedId).toBe('prj_x')
+  })
 })

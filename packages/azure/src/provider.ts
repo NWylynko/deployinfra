@@ -1,6 +1,7 @@
 import { zipSync } from 'fflate'
 import {
   ValidationError,
+  type DeployContext,
   type DeploymentResult,
   type FilesSource,
   type Provider,
@@ -94,9 +95,14 @@ async function collectZip(source: FilesSource): Promise<Uint8Array> {
   return zipSync(files)
 }
 
-export function createAzureProvider(
-  options: AzureOptions,
-): Provider<AzureDeployRaw, AzureDeployOptions> {
+export type AzureProvider = Provider<AzureDeployRaw, AzureDeployOptions> & {
+  deleteDeployment(
+    id: string,
+    ctx: DeployContext<AzureDeployOptions>,
+  ): Promise<void>
+}
+
+export function createAzureProvider(options: AzureOptions): AzureProvider {
   const {
     credentials,
     scmHost: scmHostOpt,
@@ -189,6 +195,26 @@ export function createAzureProvider(
         slot,
         appUrl: resolveAppUrl(appName, slot),
       })
+    },
+
+    /**
+     * Delete a Kudu deployment history record. Does not remove deployed files
+     * from wwwroot; the App Service app itself is never provisioned/deleted here.
+     */
+    async deleteDeployment(id, ctx) {
+      const appName = ctx.appName ?? lastAppName
+      if (!appName) {
+        throw new ValidationError(
+          'deleteDeployment requires appName (pass on deploy/getDeployment or reuse the same provider instance after deploy)',
+        )
+      }
+      const slot = ctx.slot ?? lastSlot
+      const client = createAzureClient({
+        scmBaseUrl: resolveScmBase(appName, slot),
+        getAuthHeaders,
+        signal: ctx.signal,
+      })
+      await client.deleteDeployment(id)
     },
   }
 }

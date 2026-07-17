@@ -231,4 +231,16 @@ describe('firebase provider', () => {
     expect(created).toBe(true)
     expect(result.slug).toBe('extra')
   })
+
+  it('deleteSite DELETEs the Hosting site', async () => {
+    let deleted = false
+    server.use(
+      http.delete(`${API}/v1beta1/projects/proj/sites/extra`, () => {
+        deleted = true
+        return new HttpResponse(null, { status: 200 })
+      }),
+    )
+    await firebase({ accessToken: 't' }).deleteSite('proj', 'extra')
+    expect(deleted).toBe(true)
+  })
 })

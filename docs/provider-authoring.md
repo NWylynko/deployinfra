@@ -132,6 +132,5 @@ The same layout powers:
 
 - [`@deployinfra/aws`](../packages/aws) — Amplify Hosting manual zip (`@aws-sdk/client-amplify` + presigned PUT)
 - [`@deployinfra/firebase`](../packages/firebase) — Hosting REST v1beta1 (gzip SHA-256 + release)
-- [`@deployinfra/azure`](../packages/azure) — App Service Kudu OneDeploy
 
-Each has msw (and SDK-mock where needed) tests plus an opt-in `e2e/<provider>.ts` gated on `DEPLOYINFRA_E2E_*`. No core changes are required unless the shared `Provider` contract itself grows (then bump `specificationVersion`).
+Each has msw (and SDK-mock where needed) tests plus an opt-in Vitest suite under `e2e/providers/<name>.e2e.test.ts` gated on `DEPLOYINFRA_E2E_*` (see `CONTRIBUTING.md`). Prefer cascading project/site/app delete helpers for teardown. No core changes are required unless the shared `Provider` contract itself grows (then bump `specificationVersion`).

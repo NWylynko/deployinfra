@@ -97,6 +97,18 @@ export function createVercelClient(opts: VercelClientOptions) {
         signal,
       })
     },
+
+    /** Delete a project and all of its deployments. */
+    async deleteProject(idOrName: string): Promise<void> {
+      await request(
+        withTeam(`/v9/projects/${encodeURIComponent(idOrName)}`, teamId),
+        {
+          method: 'DELETE',
+          headers: authHeaders(token),
+          signal,
+        },
+      )
+    },
   }
 }
 

@@ -347,4 +347,16 @@ describe('netlify provider', () => {
 
     expect(created).toEqual(['site_a', 'site_b'])
   })
+
+  it('deleteSite DELETEs /api/v1/sites/:id', async () => {
+    let deleted: string | null = null
+    server.use(
+      http.delete(`${API}/api/v1/sites/:id`, ({ params }) => {
+        deleted = String(params['id'])
+        return new HttpResponse(null, { status: 200 })
+      }),
+    )
+    await netlify({ token: 't' }).deleteSite('site_gone')
+    expect(deleted).toBe('site_gone')
+  })
 })

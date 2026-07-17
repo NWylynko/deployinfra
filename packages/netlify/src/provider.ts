@@ -72,9 +72,14 @@ async function buildDigestMap(
   return { digests, bySha }
 }
 
-export function createNetlifyProvider(
-  options: NetlifyOptions,
-): Provider<NetlifyDeploy, NetlifyDeployOptions> {
+export type NetlifyProvider = Provider<NetlifyDeploy, NetlifyDeployOptions> & {
+  deleteSite(
+    siteId: string,
+    ctx?: DeployContext<NetlifyDeployOptions>,
+  ): Promise<void>
+}
+
+export function createNetlifyProvider(options: NetlifyOptions): NetlifyProvider {
   const { token } = options
 
   async function resolveSite(
@@ -199,6 +204,19 @@ export function createNetlifyProvider(
     async deleteDeployment(id, ctx) {
       const client = createNetlifyClient({ token, signal: ctx.signal })
       await client.deleteDeploy(id)
+    },
+
+    /**
+     * Delete a Netlify site (cascades deploys). Prefer this over
+     * {@link deleteDeployment} for the currently published deploy, which
+     * cannot be deleted while live.
+     */
+    async deleteSite(
+      siteId: string,
+      ctx: DeployContext<NetlifyDeployOptions> = {},
+    ) {
+      const client = createNetlifyClient({ token, signal: ctx.signal })
+      await client.deleteSite(siteId)
     },
   }
 }

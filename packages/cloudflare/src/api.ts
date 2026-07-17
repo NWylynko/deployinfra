@@ -152,6 +152,34 @@ export function createCloudflareClient(opts: CloudflareClientOptions) {
       )
       return unwrapResult(res.data)
     },
+
+    async deleteDeployment(
+      projectName: string,
+      deploymentId: string,
+      force = false,
+    ): Promise<void> {
+      const qs = force ? '?force=true' : ''
+      await request(
+        `${account}/pages/projects/${encodeURIComponent(projectName)}/deployments/${encodeURIComponent(deploymentId)}${qs}`,
+        {
+          method: 'DELETE',
+          headers: auth(token),
+          signal,
+        },
+      )
+    },
+
+    /** Delete a Pages project and its deployments. */
+    async deleteProject(projectName: string): Promise<void> {
+      await request(
+        `${account}/pages/projects/${encodeURIComponent(projectName)}`,
+        {
+          method: 'DELETE',
+          headers: auth(token),
+          signal,
+        },
+      )
+    },
   }
 }
 

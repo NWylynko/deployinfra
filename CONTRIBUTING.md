@@ -25,19 +25,62 @@ pnpm --filter @deployinfra/sdk test # one package
 
 ## End-to-end
 
-Opt-in scripts under `e2e/` skip unless a token env var is set:
+Live e2e is a Vitest suite under `e2e/` (sequential, one worker). Providers without credentials are skipped via `describe.skipIf`.
 
-| Script | Required env |
+```bash
+pnpm test:e2e:source   # credential-free source contract (CI)
+pnpm test:e2e          # smoke: one `files` deploy per enabled provider
+pnpm test:e2e:full     # full matrix: dir, files, zip, zip-url, github × providers
+```
+
+### Profiles and filters
+
+| Env | Meaning |
 |---|---|
-| `pnpm e2e:vercel` | `DEPLOYINFRA_E2E_VERCEL_TOKEN` (+ optional `…_TEAM_ID`, `…_PROJECT`) |
-| `pnpm e2e:netlify` | `DEPLOYINFRA_E2E_NETLIFY_TOKEN` (+ optional `…_SITE_ID`, `…_SITE_NAME`) |
-| `pnpm e2e:cloudflare` | `DEPLOYINFRA_E2E_CLOUDFLARE_TOKEN`, `…_ACCOUNT_ID` (+ optional `…_PROJECT`) |
-| `pnpm e2e:railway` | `DEPLOYINFRA_E2E_RAILWAY_TOKEN` (+ optional project/env/service ids) |
-| `pnpm e2e:aws` | `DEPLOYINFRA_E2E_AWS_REGION` (+ optional `…_APP_ID` / `…_APP_NAME` / `…_BRANCH`; AWS default credential chain) |
-| `pnpm e2e:firebase` | `DEPLOYINFRA_E2E_FIREBASE_SERVICE_ACCOUNT`, `…_PROJECT_ID` (+ optional `…_SITE_ID`) |
-| `pnpm e2e:azure` | `DEPLOYINFRA_E2E_AZURE_APP_NAME` + publish profile (`…_PUBLISH_USER`/`…_PUBLISH_PASSWORD`) or Entra (`…_TENANT_ID`/`…_CLIENT_ID`/`…_CLIENT_SECRET`); optional `…_SCM_HOST`, `…_APP_URL`, `…_SLOT` |
+| `DEPLOYINFRA_E2E_PROFILE=smoke\|full` | Smoke (default) vs full source matrix |
+| `DEPLOYINFRA_E2E_PROVIDERS=aws,firebase` | Comma allowlist (empty = all) |
+| `DEPLOYINFRA_E2E_KEEP_RESOURCES=1` | Skip teardown (debug) |
 
-Each script deploys `e2e/fixture-site`, asserts `status === 'ready'`, fetches the URL, and cleans up when the provider supports deletion.
+### Provider credentials
+
+| Provider | Required | Optional |
+|---|---|---|
+| Vercel | `DEPLOYINFRA_E2E_VERCEL_TOKEN` | `…_TEAM_ID`, `…_PROJECT` (reuse; skips project delete) |
+| Netlify | `DEPLOYINFRA_E2E_NETLIFY_TOKEN` | `…_SITE_ID` (reuse; skips site delete) |
+| Cloudflare | `…_CLOUDFLARE_TOKEN`, `…_ACCOUNT_ID` | `…_PROJECT` (reuse) |
+| Railway | `…_RAILWAY_TOKEN` | `…_PROJECT_ID` / `…_ENVIRONMENT_ID` / `…_SERVICE_ID` (reuse) |
+| AWS | `…_AWS_REGION` + AWS default credential chain | `…_APP_ID`, `…_BRANCH` |
+| Firebase | `…_FIREBASE_PROJECT_ID` (+ `…_SERVICE_ACCOUNT` or ADC) | `…_SITE_ID` (reuse default/shared site) |
+
+### GitHub fixture
+
+Full profile deploys a public GitHub repo at **repository root** (the SDK strips only the zipball wrapper, not a subdirectory).
+
+| Env | Default |
+|---|---|
+| `DEPLOYINFRA_E2E_GITHUB_OWNER` | `NWylynko` |
+| `DEPLOYINFRA_E2E_GITHUB_REPO` | `deployinfra-e2e-fixture` |
+| `DEPLOYINFRA_E2E_GITHUB_REF` | (default branch) |
+| `DEPLOYINFRA_E2E_GITHUB_ROOT` | unset — if set, contract tests document that subdirectory selection is unsupported |
+
+Create a public repo whose root matches `e2e/fixtures/site` (`index.html` with `deployinfra-ok`, plus `package.json` / `server.mjs` for Railway).
+
+### Teardown
+
+By default the suite creates disposable names/ids and cascade-deletes:
+
+- Vercel → `deleteProject`
+- Netlify → `deleteSite`
+- Cloudflare → `deleteProject`
+- Railway → `deleteProject` (account/team token)
+- AWS → `deleteApp` (or `deleteBranch` when reusing an app)
+- Firebase → `deleteSite` for non-default sites; otherwise best-effort version delete (cannot unpublish)
+
+When reuse IDs are set via env, cleanup is narrower so shared resources survive.
+
+### Cost / quotas
+
+Full matrix is **5 sources × N providers**. Prefer smoke locally; use `DEPLOYINFRA_E2E_PROVIDERS` to limit blast radius. `.github/workflows/e2e.yml` runs the full matrix for every commit in a non-draft pull request targeting `main`, using the `e2e` GitHub Environment for secrets.
 
 ## Changesets
 

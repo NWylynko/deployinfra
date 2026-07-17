@@ -145,9 +145,19 @@ function batchMissing(files: HashedFile[], missing: Set<string>): HashedFile[][]
   return batches
 }
 
+export type CloudflareProvider = Provider<
+  PagesDeployment,
+  CloudflareDeployOptions
+> & {
+  deleteProject(
+    projectName: string,
+    ctx?: DeployContext<CloudflareDeployOptions>,
+  ): Promise<void>
+}
+
 export function createCloudflareProvider(
   options: CloudflareOptions,
-): Provider<PagesDeployment, CloudflareDeployOptions> {
+): CloudflareProvider {
   const {
     token,
     accountId,
@@ -274,6 +284,24 @@ export function createCloudflareProvider(
         if (project) projects.set(projectName, project)
       }
       return toResult(dep, projectName, project)
+    },
+
+    /**
+     * Delete a Pages project (cascades deployments). Prefer this over deleting
+     * the latest branch deployment, which Cloudflare rejects.
+     */
+    async deleteProject(
+      projectName: string,
+      ctx: DeployContext<CloudflareDeployOptions> = {},
+    ) {
+      const client = createCloudflareClient({
+        token,
+        accountId,
+        signal: ctx.signal,
+      })
+      await client.deleteProject(projectName)
+      projects.delete(projectName)
+      if (lastProjectName === projectName) lastProjectName = undefined
     },
   }
 }

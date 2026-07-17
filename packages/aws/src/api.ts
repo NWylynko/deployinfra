@@ -4,6 +4,9 @@ import {
   CreateAppCommand,
   CreateBranchCommand,
   CreateDeploymentCommand,
+  DeleteAppCommand,
+  DeleteBranchCommand,
+  DeleteJobCommand,
   GetAppCommand,
   GetBranchCommand,
   GetJobCommand,
@@ -230,6 +233,32 @@ export function createAmplifyApi(opts: AmplifyClientOptions) {
         body: Buffer.from(body),
         signal,
       })
+    },
+
+    async deleteApp(appId: string): Promise<void> {
+      await run(() =>
+        client.send(new DeleteAppCommand({ appId }), { abortSignal: signal }),
+      )
+    },
+
+    async deleteBranch(appId: string, branchName: string): Promise<void> {
+      await run(() =>
+        client.send(new DeleteBranchCommand({ appId, branchName }), {
+          abortSignal: signal,
+        }),
+      )
+    },
+
+    async deleteJob(
+      appId: string,
+      branchName: string,
+      jobId: string,
+    ): Promise<void> {
+      await run(() =>
+        client.send(new DeleteJobCommand({ appId, branchName, jobId }), {
+          abortSignal: signal,
+        }),
+      )
     },
   }
 }

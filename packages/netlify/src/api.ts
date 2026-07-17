@@ -178,6 +178,15 @@ export function createNetlifyClient(opts: NetlifyClientOptions) {
         signal,
       })
     },
+
+    /** Permanently delete a site and all of its deploys. */
+    async deleteSite(siteId: string): Promise<void> {
+      await request(`${API}/api/v1/sites/${encodeURIComponent(siteId)}`, {
+        method: 'DELETE',
+        headers: authHeaders(token),
+        signal,
+      })
+    },
   }
 }
 

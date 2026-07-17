@@ -111,6 +111,26 @@ export function createAzureClient(opts: AzureClientOptions) {
         throw err
       }
     },
+
+    /**
+     * Delete a deployment history record. Does **not** remove wwwroot content
+     * or take the live site offline. Active deployments may return 409.
+     */
+    async deleteDeployment(id: string): Promise<void> {
+      const headers = await getAuthHeaders()
+      try {
+        await request(`${base}/api/deployments/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+          headers,
+          signal,
+        })
+      } catch (err) {
+        if (err instanceof AuthError) {
+          throw new AuthError(hintAuth(err.message), { cause: err })
+        }
+        throw err
+      }
+    },
   }
 }
 

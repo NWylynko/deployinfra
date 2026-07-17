@@ -62,9 +62,19 @@ function toResult(
   }
 }
 
+export type RailwayProvider = Provider<
+  RailwayDeployment,
+  RailwayDeployOptions
+> & {
+  deleteProject(
+    projectId: string,
+    ctx?: DeployContext<RailwayDeployOptions>,
+  ): Promise<void>
+}
+
 export function createRailwayProvider(
   options: RailwayOptions,
-): Provider<RailwayDeployment, RailwayDeployOptions> {
+): RailwayProvider {
   const { token } = options
 
   async function resolveIds(
@@ -188,6 +198,18 @@ export function createRailwayProvider(
       const client = createRailwayClient({ token, signal: ctx.signal })
       const dep = await client.getDeployment(id)
       return toResult(dep)
+    },
+
+    /**
+     * Delete a Railway project (cascades services/deployments). Requires an
+     * account/team token — project-scoped tokens cannot delete projects.
+     */
+    async deleteProject(
+      projectId: string,
+      ctx: DeployContext<RailwayDeployOptions> = {},
+    ) {
+      const client = createRailwayClient({ token, signal: ctx.signal })
+      await client.projectDelete(projectId)
     },
   }
 }

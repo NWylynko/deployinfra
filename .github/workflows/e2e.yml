@@ -1,0 +1,67 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source:
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test:e2e:source
+
+  live:
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: e2e
+    needs: source
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Run live e2e
+        env:
+          DEPLOYINFRA_E2E_PROFILE: full
+          DEPLOYINFRA_E2E_VERCEL_TOKEN: ${{ secrets.DEPLOYINFRA_E2E_VERCEL_TOKEN }}
+          DEPLOYINFRA_E2E_VERCEL_TEAM_ID: ${{ secrets.DEPLOYINFRA_E2E_VERCEL_TEAM_ID }}
+          DEPLOYINFRA_E2E_NETLIFY_TOKEN: ${{ secrets.DEPLOYINFRA_E2E_NETLIFY_TOKEN }}
+          DEPLOYINFRA_E2E_CLOUDFLARE_TOKEN: ${{ secrets.DEPLOYINFRA_E2E_CLOUDFLARE_TOKEN }}
+          DEPLOYINFRA_E2E_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.DEPLOYINFRA_E2E_CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOYINFRA_E2E_RAILWAY_TOKEN: ${{ secrets.DEPLOYINFRA_E2E_RAILWAY_TOKEN }}
+          DEPLOYINFRA_E2E_AWS_REGION: ${{ secrets.DEPLOYINFRA_E2E_AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          DEPLOYINFRA_E2E_FIREBASE_PROJECT_ID: ${{ secrets.DEPLOYINFRA_E2E_FIREBASE_PROJECT_ID }}
+          DEPLOYINFRA_E2E_FIREBASE_SERVICE_ACCOUNT: ${{ secrets.DEPLOYINFRA_E2E_FIREBASE_SERVICE_ACCOUNT }}
+          DEPLOYINFRA_E2E_GITHUB_OWNER: ${{ secrets.DEPLOYINFRA_E2E_GITHUB_OWNER }}
+          DEPLOYINFRA_E2E_GITHUB_REPO: ${{ secrets.DEPLOYINFRA_E2E_GITHUB_REPO }}
+          DEPLOYINFRA_E2E_GITHUB_REF: ${{ secrets.DEPLOYINFRA_E2E_GITHUB_REF }}
+        run: pnpm test:e2e:full

@@ -177,4 +177,23 @@ describe('azure provider', () => {
         err.message.includes('SCM basic auth may be disabled'),
     )
   })
+
+  it('deleteDeployment DELETEs the Kudu deployment record', async () => {
+    let deleted: string | null = null
+    server.use(
+      http.delete(`${SCM}/api/deployments/:id`, ({ params }) => {
+        deleted = String(params['id'])
+        return new HttpResponse(null, { status: 200 })
+      }),
+    )
+    const provider = azure({
+      credentials: {
+        kind: 'publishProfile',
+        username: 'u',
+        password: 'p',
+      },
+    })
+    await provider.deleteDeployment('dep-old', { appName: 'myapp' })
+    expect(deleted).toBe('dep-old')
+  })
 })

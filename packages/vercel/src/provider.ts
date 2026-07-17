@@ -98,9 +98,14 @@ function resolveName(ctx: DeployContext<VercelDeployOptions>): string {
   return ctx.name
 }
 
-export function createVercelProvider(
-  options: VercelOptions,
-): Provider<VercelDeployment, VercelDeployOptions> {
+export type VercelProvider = Provider<VercelDeployment, VercelDeployOptions> & {
+  deleteProject(
+    idOrName: string,
+    ctx?: DeployContext<VercelDeployOptions>,
+  ): Promise<void>
+}
+
+export function createVercelProvider(options: VercelOptions): VercelProvider {
   const { token, teamId, uploadConcurrency = 8 } = options
 
   async function deployFiles(
@@ -186,6 +191,23 @@ export function createVercelProvider(
     async deleteDeployment(id, ctx) {
       const client = createVercelClient({ token, teamId, signal: ctx.signal })
       await client.deleteDeployment(id)
+    },
+
+    /**
+     * Delete a Vercel project (cascades deployments). Prefer this over
+     * {@link deleteDeployment} for production deploys, which cannot be deleted
+     * while they hold the production alias.
+     */
+    async deleteProject(
+      idOrName: string,
+      ctx: DeployContext<VercelDeployOptions> = {},
+    ) {
+      const client = createVercelClient({
+        token,
+        teamId,
+        signal: ctx.signal,
+      })
+      await client.deleteProject(idOrName)
     },
   }
 }

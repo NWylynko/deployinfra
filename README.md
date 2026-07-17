@@ -1,7 +1,7 @@
 # DeployInfra
 
 One API to deploy to Vercel, Netlify, Cloudflare Pages, Railway, AWS Amplify,
-Firebase Hosting, and Azure App Service.
+and Firebase Hosting.
 
 ```ts
 import { createDeployer } from '@deployinfra/sdk'
@@ -20,7 +20,7 @@ const result = await deployer.deploy('./dist', { name: 'my-app' })
 ```bash
 pnpm add @deployinfra/sdk @deployinfra/vercel
 # or: @deployinfra/netlify | @deployinfra/cloudflare | @deployinfra/railway
-# or: @deployinfra/aws | @deployinfra/firebase | @deployinfra/azure
+# or: @deployinfra/aws | @deployinfra/firebase
 ```
 
 Requires **Node.js ≥ 22.12**.
@@ -35,15 +35,14 @@ Requires **Node.js ≥ 22.12**.
 | [`@deployinfra/railway`](./packages/railway) | Prefer a **project token** | Builds what you send — static dirs need a server. |
 | [`@deployinfra/aws`](./packages/aws) | AWS credential chain / explicit keys | Amplify Hosting manual zip deploy. Pass `appId` or `name` on `deploy()`. |
 | [`@deployinfra/firebase`](./packages/firebase) | ADC or service account | Firebase Hosting REST (`v1beta1`). Pass `projectId` on `deploy()`. |
-| [`@deployinfra/azure`](./packages/azure) | Publish profile or Entra | App Service Kudu OneDeploy. Requires a pre-existing web app (`appName` on `deploy()`). **Not** Static Web Apps (no plain-HTTP upload path). |
 
 ## Capability matrix
 
-| Source | Vercel | Netlify | Cloudflare Pages | Railway | AWS Amplify | Firebase Hosting | Azure App Service |
-|---|---|---|---|---|---|---|---|
-| dir | native (sha1 upload) | native (digest deploy) | native (direct upload) | native (tar.gz `/up`) | zip (fflate) | gzip + sha256 | zip (fflate) |
-| zip | core unzips | **zip passthrough** | core unzips | core unzips → re-tars | **zip passthrough** | core unzips | **zip passthrough** |
-| github | native `gitSource` (needs GH app) or archive | archive | archive | serviceCreate (needs GH app) or archive | archive | archive | archive |
+| Source | Vercel | Netlify | Cloudflare Pages | Railway | AWS Amplify | Firebase Hosting |
+|---|---|---|---|---|---|---|
+| dir | native (sha1 upload) | native (digest deploy) | native (direct upload) | native (tar.gz `/up`) | zip (fflate) | gzip + sha256 |
+| zip | core unzips | **zip passthrough** | core unzips | core unzips → re-tars | **zip passthrough** | core unzips |
+| github | native `gitSource` (needs GH app) or archive | archive | archive | serviceCreate (needs GH app) or archive | archive | archive |
 
 ## Quickstart
 

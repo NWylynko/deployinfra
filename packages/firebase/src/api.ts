@@ -190,6 +190,11 @@ export function createFirebaseClient(opts: FirebaseClientOptions) {
     async deleteVersion(siteId: string, versionId: string): Promise<void> {
       await authed(versionPath(siteId, versionId), { method: 'DELETE' })
     },
+
+    /** Delete a non-default Hosting site. */
+    async deleteSite(projectId: string, siteId: string): Promise<void> {
+      await authed(sitePath(projectId, siteId), { method: 'DELETE' })
+    },
   }
 }
 

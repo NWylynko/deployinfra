@@ -3,6 +3,7 @@ import {
   CreateAppCommand,
   CreateBranchCommand,
   CreateDeploymentCommand,
+  DeleteAppCommand,
   GetAppCommand,
   GetBranchCommand,
   GetJobCommand,
@@ -231,6 +232,18 @@ describe('aws provider', () => {
       appId: 'app_1',
       branchName: 'prod',
       stage: 'PRODUCTION',
+    })
+  })
+
+  it('deleteApp sends DeleteAppCommand', async () => {
+    amplifyMock.on(DeleteAppCommand).resolves({} as never)
+    const provider = aws({
+      region: 'us-east-1',
+      credentials: { accessKeyId: 'A', secretAccessKey: 'B' },
+    })
+    await provider.deleteApp('app_del')
+    expect(amplifyMock.commandCalls(DeleteAppCommand)[0]?.args[0].input).toEqual({
+      appId: 'app_del',
     })
   })
 })

@@ -102,9 +102,20 @@ async function buildGzipMap(source: FilesSource): Promise<{
   return { files, byHash }
 }
 
+export type FirebaseProvider = Provider<
+  FirebaseDeployRaw,
+  FirebaseDeployOptions
+> & {
+  deleteSite(
+    projectId: string,
+    siteId: string,
+    ctx?: { signal?: AbortSignal },
+  ): Promise<void>
+}
+
 export function createFirebaseProvider(
   options: FirebaseOptions = {},
-): Provider<FirebaseDeployRaw, FirebaseDeployOptions> {
+): FirebaseProvider {
   const {
     serviceAccount,
     accessToken,
@@ -213,6 +224,19 @@ export function createFirebaseProvider(
       }
       const client = createFirebaseClient({ getToken, signal: ctx.signal })
       await client.deleteVersion(siteId, versionIdFromName(id))
+    },
+
+    /**
+     * Delete a non-default Hosting site. The project's default site cannot be
+     * deleted via the API.
+     */
+    async deleteSite(
+      projectId: string,
+      siteId: string,
+      ctx: { signal?: AbortSignal } = {},
+    ) {
+      const client = createFirebaseClient({ getToken, signal: ctx.signal })
+      await client.deleteSite(projectId, siteId)
     },
   }
 }

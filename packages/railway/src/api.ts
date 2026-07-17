@@ -147,6 +147,27 @@ export function createRailwayClient(opts: RailwayClientOptions) {
       return data.deployment
     },
 
+    /** Delete a project and all services/environments/deployments under it. */
+    async projectDelete(projectId: string): Promise<boolean> {
+      const data = await graphql<{ projectDelete: boolean }>(
+        `mutation($id: String!) {
+          projectDelete(id: $id)
+        }`,
+        { id: projectId },
+      )
+      return data.projectDelete
+    },
+
+    async serviceDelete(serviceId: string): Promise<boolean> {
+      const data = await graphql<{ serviceDelete: boolean }>(
+        `mutation($id: String!) {
+          serviceDelete(id: $id)
+        }`,
+        { id: serviceId },
+      )
+      return data.serviceDelete
+    },
+
     async upload(
       projectId: string,
       environmentId: string,

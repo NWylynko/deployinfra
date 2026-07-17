@@ -89,9 +89,19 @@ async function collectZip(source: FilesSource): Promise<Uint8Array> {
   return zipSync(files)
 }
 
-export function createAwsProvider(
-  options: AwsOptions,
-): Provider<AmplifyJobRaw, AwsDeployOptions> {
+export type AwsProvider = Provider<AmplifyJobRaw, AwsDeployOptions> & {
+  deleteApp(
+    appId: string,
+    ctx?: DeployContext<AwsDeployOptions>,
+  ): Promise<void>
+  deleteBranch(
+    appId: string,
+    branchName: string,
+    ctx?: DeployContext<AwsDeployOptions>,
+  ): Promise<void>
+}
+
+export function createAwsProvider(options: AwsOptions): AwsProvider {
   const { region, credentials } = options
 
   let lastApp: AmplifyAppInfo | undefined
@@ -236,6 +246,30 @@ export function createAwsProvider(
         createdAt: job.summary?.startTime?.toISOString?.(),
         job,
       })
+    },
+
+    /** Delete an Amplify app and all of its branches/jobs. */
+    async deleteApp(appId: string, ctx: DeployContext<AwsDeployOptions> = {}) {
+      const api = createAmplifyApi({
+        region,
+        credentials,
+        signal: ctx.signal,
+      })
+      await api.deleteApp(appId)
+    },
+
+    /** Delete a single Amplify branch (and its jobs). */
+    async deleteBranch(
+      appId: string,
+      branchName: string,
+      ctx: DeployContext<AwsDeployOptions> = {},
+    ) {
+      const api = createAmplifyApi({
+        region,
+        credentials,
+        signal: ctx.signal,
+      })
+      await api.deleteBranch(appId, branchName)
     },
   }
 }
