@@ -25,7 +25,7 @@ pnpm --filter @deployinfra/sdk test # one package
 
 ## End-to-end
 
-Live e2e is a Vitest suite under `e2e/` (sequential, one worker). Providers without credentials are skipped via `describe.skipIf`.
+Live e2e is a Vitest suite under `e2e/` (sequential, one worker). Providers without credentials **fail** (so CI surfaces missing secrets). Use `DEPLOYINFRA_E2E_PROVIDERS` to intentionally skip providers you are not testing.
 
 ```bash
 pnpm test:e2e:source   # credential-free source contract (CI)

@@ -6,11 +6,27 @@ import type { ProviderAdapter } from './providers.ts'
 import { semanticSources, smokeSources } from './sources.ts'
 
 export function describeProviderE2e(adapter: ProviderAdapter): void {
-  const title = adapter.enabled
-    ? `e2e: ${adapter.name}`
-    : `e2e: ${adapter.name} (skipped: ${adapter.skipReason})`
+  const filteredOut = !adapter.enabled && adapter.skipReason === 'filtered out'
 
-  describe.skipIf(!adapter.enabled)(title, () => {
+  if (filteredOut) {
+    describe.skip(`e2e: ${adapter.name} (filtered out)`, () => {
+      it('skipped by DEPLOYINFRA_E2E_PROVIDERS', () => {})
+    })
+    return
+  }
+
+  if (!adapter.enabled) {
+    describe(`e2e: ${adapter.name}`, () => {
+      it('requires credentials', () => {
+        throw new Error(
+          `e2e: ${adapter.name} is not configured — ${adapter.skipReason ?? 'missing credentials'}`,
+        )
+      })
+    })
+    return
+  }
+
+  describe(`e2e: ${adapter.name}`, () => {
     let fixture: E2eFixture
 
     beforeAll(async () => {
