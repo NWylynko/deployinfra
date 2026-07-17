@@ -1,6 +1,6 @@
 {
   "name": "@deployinfra/netlify",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Netlify provider for DeployInfra — digest and zip deploys via the Netlify API.",
   "license": "Apache-2.0",
   "type": "module",

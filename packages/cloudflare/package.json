@@ -1,6 +1,6 @@
 {
   "name": "@deployinfra/cloudflare",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Cloudflare Pages provider for DeployInfra — direct upload via wrangler-compatible APIs.",
   "license": "Apache-2.0",
   "type": "module",

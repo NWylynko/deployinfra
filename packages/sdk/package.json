@@ -1,6 +1,6 @@
 {
   "name": "@deployinfra/sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Unified deployment SDK — create a deployer once, deploy to any provider.",
   "license": "Apache-2.0",
   "type": "module",
