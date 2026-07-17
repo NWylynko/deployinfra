@@ -34,19 +34,43 @@ export function providerEnabled(name: string): boolean {
   return filter === null || filter.has(name)
 }
 
-export async function assertLive(url: string): Promise<void> {
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`Expected ${url} to be reachable, got HTTP ${res.status}`)
-  }
-  const body = await res.text()
-  if (!body.includes(MARKER)) {
-    throw new Error(`Expected fixture marker "${MARKER}" in ${url}`)
-  }
-}
-
 export function uniqueSlug(prefix: string): string {
   const stamp = Date.now().toString(36)
   const rand = Math.random().toString(36).slice(2, 8)
   return `${prefix}-${stamp}-${rand}`.slice(0, 40).replace(/-+$/g, '')
+}
+
+/** Poll until the URL serves the fixture marker (CDN/SSL can lag after deploy). */
+export async function assertLive(
+  url: string,
+  options: { attempts?: number; delayMs?: number } = {},
+): Promise<void> {
+  const attempts = options.attempts ?? 12
+  const delayMs = options.delayMs ?? 2_500
+  let lastError: unknown
+
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url)
+      if (!res.ok) {
+        throw new Error(
+          `Expected ${url} to be reachable, got HTTP ${res.status}`,
+        )
+      }
+      const body = await res.text()
+      if (!body.includes(MARKER)) {
+        throw new Error(`Expected fixture marker "${MARKER}" in ${url}`)
+      }
+      return
+    } catch (err) {
+      lastError = err
+      if (i < attempts - 1) {
+        await new Promise((r) => setTimeout(r, delayMs))
+      }
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error(`assertLive failed for ${url}: ${String(lastError)}`)
 }

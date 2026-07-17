@@ -18,6 +18,10 @@ export const name = 'vercel' as const
  *
  * Pass `name` / `target` on `deploy()` — not on the factory.
  *
+ * **API token:** create at {@link https://vercel.com/account/tokens | vercel.com/account/tokens}
+ * (Account Settings → Tokens). Scope the token to your personal account or the
+ * target team; pass `teamId` for team deploys.
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

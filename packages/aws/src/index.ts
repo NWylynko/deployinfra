@@ -17,6 +17,12 @@ export const name = 'aws' as const
  * Manual deploys via zip upload (passthrough or fflate-built). Pass `appId`
  * or `name` on `deploy()` — not on the factory.
  *
+ * **Credentials:** omit `credentials` to use the AWS default chain
+ * (`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`, `~/.aws/credentials`, SSO, IMDS).
+ * Create IAM access keys in the
+ * {@link https://console.aws.amazon.com/iam/ | IAM console}
+ * with Amplify Hosting permissions. Set `region` to the Amplify app’s region.
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

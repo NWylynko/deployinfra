@@ -29,10 +29,22 @@ const DEFAULT_UPLOAD_CONCURRENCY = 3
  */
 export interface CloudflareOptions {
   /**
-   * Cloudflare API token with **Account → Cloudflare Pages → Edit**.
+   * Cloudflare API token with **Account → Cloudflare Pages → Edit**
+   * (and usually **Account Settings → Read** so account APIs work).
+   *
+   * Create one at {@link https://dash.cloudflare.com/profile/api-tokens | dash.cloudflare.com/profile/api-tokens}
+   * (My Profile → API Tokens → Create Token). Use the “Edit Cloudflare Workers”
+   * template and add Pages Edit, or build a custom token with
+   * `Account.Cloudflare Pages:Edit`.
    */
   token: string
-  /** Cloudflare account id (dashboard URL / `wrangler whoami`). */
+  /**
+   * Cloudflare account id (32-char hex).
+   *
+   * Find it in the dashboard URL after login (`/<account_id>/…`), on any
+   * account’s overview sidebar, or via `wrangler whoami` /
+   * {@link https://dash.cloudflare.com/?to=/:account/workers | Workers & Pages}.
+   */
   accountId: string
   /** Max concurrent asset-batch uploads. Default `3`. */
   uploadConcurrency?: number

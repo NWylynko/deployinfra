@@ -19,6 +19,10 @@ export const name = 'cloudflare' as const
  *
  * Pass `name` / `branch` on `deploy()` — not on the factory.
  *
+ * **API token:** {@link https://dash.cloudflare.com/profile/api-tokens | My Profile → API Tokens}
+ * with **Account → Cloudflare Pages → Edit**. **Account id:** dashboard URL /
+ * account overview / `wrangler whoami`.
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

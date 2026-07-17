@@ -16,6 +16,12 @@ export const name = 'firebase' as const
  * Uploads gzipped files via the Hosting REST API (v1beta1). Pass `projectId`
  * (and optional `siteId`) on `deploy()` — not on the factory.
  *
+ * **Credentials:** pass `serviceAccount` JSON from
+ * {@link https://console.firebase.google.com/ | Firebase console} → Project settings →
+ * Service accounts → Generate new private key, or omit it to use ADC
+ * (`gcloud auth application-default login` /
+ * `GOOGLE_APPLICATION_CREDENTIALS`).
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

@@ -2,6 +2,7 @@ import { createDeployer } from '@deployinfra/sdk'
 import { cloudflare } from '@deployinfra/cloudflare'
 import { netlify } from '@deployinfra/netlify'
 import { vercel } from '@deployinfra/vercel'
+import { aws } from '@deployinfra/aws'
 import { writeFile } from 'node:fs/promises'
 
 async function main(): Promise<void> {
@@ -17,6 +18,13 @@ async function main(): Promise<void> {
 
   const netlifyProvider = netlify({
     token: "...",
+  })
+
+  const awsProvider = aws({
+    region: "us-east-1",
+    credentials: {
+
+    }
   })
 
   const deployer = createDeployer({

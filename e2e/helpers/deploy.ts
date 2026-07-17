@@ -5,7 +5,7 @@ import {
 } from '@deployinfra/sdk'
 import { assertLive } from './env.ts'
 import { safeCleanup } from './cleanup.ts'
-import type { ProviderAdapter } from './providers.ts'
+import type { ProviderAdapter, TrackedProvider } from './providers.ts'
 
 export interface DeployOutcome {
   result: DeploymentResult
@@ -14,8 +14,10 @@ export interface DeployOutcome {
 export async function deployAndVerify(
   adapter: ProviderAdapter,
   source: SourceInput,
+  tracked: TrackedProvider,
+  options: { cleanup?: boolean } = {},
 ): Promise<DeployOutcome> {
-  const tracked = adapter.createTracked()
+  const { cleanup = false } = options
   let deploymentId: string | undefined
   let primaryError: unknown
 
@@ -51,10 +53,23 @@ export async function deployAndVerify(
     primaryError = err
     throw err
   } finally {
-    await safeCleanup(
-      `${adapter.name} teardown`,
-      () => tracked.cleanup({ deploymentId }),
-      primaryError,
-    )
+    if (cleanup) {
+      await safeCleanup(
+        `${adapter.name} teardown`,
+        () => tracked.cleanup({ deploymentId }),
+        primaryError,
+      )
+    }
   }
+}
+
+export async function teardownTracked(
+  adapter: ProviderAdapter,
+  tracked: TrackedProvider,
+  deploymentId?: string,
+): Promise<void> {
+  await safeCleanup(
+    `${adapter.name} teardown`,
+    () => tracked.cleanup({ deploymentId }),
+  )
 }

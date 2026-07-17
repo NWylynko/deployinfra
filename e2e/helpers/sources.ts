@@ -26,6 +26,28 @@ export function githubConfig(): {
   return { owner, repo, ref, url, root }
 }
 
+/** True when the public GitHub fixture zipball is downloadable. */
+export async function githubFixtureAvailable(): Promise<boolean> {
+  const gh = githubConfig()
+  const spec = gh.ref ?? 'HEAD'
+  const url = `https://codeload.github.com/${gh.owner}/${gh.repo}/zip/${encodeURIComponent(spec)}`
+  try {
+    const res = await fetch(url, { method: 'HEAD', redirect: 'follow' })
+    if (res.ok) return true
+    // Some hosts reject HEAD; try a ranged GET.
+    if (res.status === 405 || res.status === 501) {
+      const get = await fetch(url, {
+        headers: { Range: 'bytes=0-0' },
+        redirect: 'follow',
+      })
+      return get.ok || get.status === 206
+    }
+    return false
+  } catch {
+    return false
+  }
+}
+
 export function semanticSources(): SourceCase[] {
   const gh = githubConfig()
   return [

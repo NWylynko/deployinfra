@@ -24,11 +24,20 @@ import { mapVercelReadyState } from './status.js'
  */
 export interface VercelOptions {
   /**
-   * Vercel access token (`vercel tokens` / account settings).
-   * Needs deploy scope for the target team/account.
+   * Vercel access token.
+   *
+   * Create one at {@link https://vercel.com/account/tokens | vercel.com/account/tokens}
+   * (Account Settings → Tokens). Pick a scope that covers the personal account or
+   * team you deploy into. For team deploys, also pass {@link teamId}.
+   *
+   * The token must be allowed to create deployments (and delete projects if you use
+   * `deleteProject` / e2e teardown).
    */
   token: string
-  /** Team id; appended as `?teamId=` on every API call when set. */
+  /**
+   * Team id (`team_…`), required when the token is scoped to a team or you deploy
+   * into a team. Find it under the team’s Settings → General, or in the dashboard URL.
+   */
   teamId?: string
   /** Max concurrent `POST /v2/files` uploads. Default `8`. */
   uploadConcurrency?: number

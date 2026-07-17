@@ -1,39 +1,35 @@
 import { beforeAll, afterAll, describe, it, expect } from 'vitest'
 import { createFixture, type E2eFixture } from './fixture.ts'
-import { deployAndVerify } from './deploy.ts'
+import { deployAndVerify, teardownTracked } from './deploy.ts'
 import { profile } from './env.ts'
-import type { ProviderAdapter } from './providers.ts'
-import { semanticSources, smokeSources } from './sources.ts'
+import type { ProviderAdapter, TrackedProvider } from './providers.ts'
+import {
+  githubFixtureAvailable,
+  semanticSources,
+  smokeSources,
+} from './sources.ts'
 
 export function describeProviderE2e(adapter: ProviderAdapter): void {
-  const filteredOut = !adapter.enabled && adapter.skipReason === 'filtered out'
+  const title = adapter.enabled
+    ? `e2e: ${adapter.name}`
+    : `e2e: ${adapter.name} (skipped: ${adapter.skipReason})`
 
-  if (filteredOut) {
-    describe.skip(`e2e: ${adapter.name} (filtered out)`, () => {
-      it('skipped by DEPLOYINFRA_E2E_PROVIDERS', () => {})
-    })
-    return
-  }
-
-  if (!adapter.enabled) {
-    describe(`e2e: ${adapter.name}`, () => {
-      it('requires credentials', () => {
-        throw new Error(
-          `e2e: ${adapter.name} is not configured — ${adapter.skipReason ?? 'missing credentials'}`,
-        )
-      })
-    })
-    return
-  }
-
-  describe(`e2e: ${adapter.name}`, () => {
+  describe.skipIf(!adapter.enabled)(title, () => {
     let fixture: E2eFixture
+    let tracked: TrackedProvider
+    let lastDeploymentId: string | undefined
+    let githubOk = false
 
     beforeAll(async () => {
       fixture = await createFixture()
+      tracked = adapter.createTracked()
+      githubOk = await githubFixtureAvailable()
     }, 30_000)
 
     afterAll(async () => {
+      if (tracked) {
+        await teardownTracked(adapter, tracked, lastDeploymentId)
+      }
       await fixture?.close()
     })
 
@@ -42,11 +38,19 @@ export function describeProviderE2e(adapter: ProviderAdapter): void {
     for (const sourceCase of cases) {
       it(
         `deploys via ${sourceCase.label}`,
-        async () => {
+        async ({ skip }) => {
+          if (sourceCase.label === 'github' && !githubOk) {
+            skip(
+              'GitHub fixture repo missing — create a public deployinfra-e2e-fixture or set DEPLOYINFRA_E2E_GITHUB_*',
+            )
+          }
+
           const outcome = await deployAndVerify(
             adapter,
             sourceCase.make(fixture),
+            tracked,
           )
+          lastDeploymentId = outcome.result.deploymentId
           expect(outcome.result.status).toBe('ready')
           expect(outcome.result.url).toBeTruthy()
         },

@@ -27,8 +27,19 @@ const DEFAULT_UPLOAD_CONCURRENCY = 8
  */
 export interface FirebaseOptions {
   /**
-   * Service account JSON object or string. When omitted, Application Default
-   * Credentials (ADC) are used.
+   * Service account JSON (object or stringified JSON).
+   *
+   * Create / download a key in the Firebase console:
+   * {@link https://console.firebase.google.com/ | console.firebase.google.com}
+   * → your project → Project settings (gear) → **Service accounts** →
+   * **Generate new private key**. The account needs Firebase Hosting Admin
+   * (or broader Editor) on the project.
+   *
+   * When omitted, Application Default Credentials (ADC) are used — e.g.
+   * `gcloud auth application-default login`, or
+   * `GOOGLE_APPLICATION_CREDENTIALS` pointing at a key file.
+   *
+   * @see https://firebase.google.com/docs/admin/setup#initialize-sdk
    */
   serviceAccount?: JWTInput | string
   /**
@@ -44,7 +55,11 @@ export interface FirebaseOptions {
  * Per-call options accepted by `deploy()` / `getDeployment()` when using Firebase.
  */
 export interface FirebaseDeployOptions {
-  /** GCP / Firebase project id (required). */
+  /**
+   * GCP / Firebase project id (required).
+   * Shown in the Firebase console project settings overview, or as the
+   * `project_id` field inside a service-account JSON key.
+   */
   projectId: string
   /**
    * Hosting site id. Defaults to `projectId` (the project's default site).

@@ -26,11 +26,26 @@ const MAX_ZIP_BYTES = 5 * 1024 * 1024 * 1024
  * Credentials + region. Per-deploy app/branch selection goes on `deploy()`.
  */
 export interface AwsOptions {
-  /** AWS region for Amplify Hosting (e.g. `us-east-1`). */
+  /**
+   * AWS region for Amplify Hosting (e.g. `us-east-1`).
+   * Amplify apps are regional — use the region where the app lives or will be created.
+   */
   region: string
   /**
-   * Explicit credentials. When omitted, the AWS SDK default credential chain
-   * resolves env vars / shared config / IMDS / etc.
+   * Explicit AWS credentials (`accessKeyId` / `secretAccessKey`, optional `sessionToken`).
+   *
+   * When omitted, the AWS SDK default credential chain resolves
+   * `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN`, shared
+   * config (`~/.aws/credentials` via `aws configure`), SSO, or IMDS.
+   *
+   * Create IAM access keys in the
+   * {@link https://console.aws.amazon.com/iam/ | IAM console}
+   * (Users → Security credentials → Create access key), or use a role.
+   * The principal needs Amplify Hosting permissions (e.g. `amplify:*` on the
+   * target apps, or a tighter policy covering create/get/start deployment and
+   * optional delete).
+   *
+   * @see https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html
    */
   credentials?: AmplifyCredentials
 }

@@ -18,6 +18,9 @@ export const name = 'netlify' as const
  *
  * Pass `name` and/or `siteId` on `deploy()` — not on the factory.
  *
+ * **API token:** create a personal access token at
+ * {@link https://app.netlify.com/user/applications#personal-access-tokens | User settings → Applications → Personal access tokens}.
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

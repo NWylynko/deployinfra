@@ -17,8 +17,12 @@ import { mapNetlifyState } from './status.js'
  */
 export interface NetlifyOptions {
   /**
-   * Netlify personal access token or OAuth token
-   * (User settings → Applications → Personal access tokens).
+   * Netlify personal access token (or OAuth access token).
+   *
+   * Create one at
+   * {@link https://app.netlify.com/user/applications#personal-access-tokens | app.netlify.com/user/applications}
+   * (User settings → Applications → Personal access tokens → New access token).
+   * No special scopes are required for site create/deploy/delete used by this provider.
    */
   token: string
 }
