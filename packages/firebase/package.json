@@ -1,6 +1,6 @@
 {
   "name": "@deployinfra/firebase",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Firebase Hosting provider for DeployInfra — REST v1beta1 file uploads.",
   "license": "Apache-2.0",
   "type": "module",

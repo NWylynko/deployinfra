@@ -1,6 +1,6 @@
 {
   "name": "@deployinfra/aws",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "AWS Amplify Hosting provider for DeployInfra — manual zip / fileMap deploys.",
   "license": "Apache-2.0",
   "type": "module",
