@@ -126,6 +126,12 @@ packages/acme/
 
 Export the factory from `src/index.ts`. Keep provider-specific types (`AcmeOptions`) public; keep raw API types internal unless useful.
 
-## Slotting in `@deployinfra/aws` (future)
+## Reference providers beyond Netlify
 
-Same pattern: new workspace package, `specificationVersion: 'v1'`, declare capabilities, use `/internal` helpers, add msw tests + an `e2e/aws.ts` gated on `DEPLOYINFRA_E2E_AWS_*`. No core changes required unless the shared contract itself grows (then bump the specification version).
+The same layout powers:
+
+- [`@deployinfra/aws`](../packages/aws) — Amplify Hosting manual zip (`@aws-sdk/client-amplify` + presigned PUT)
+- [`@deployinfra/firebase`](../packages/firebase) — Hosting REST v1beta1 (gzip SHA-256 + release)
+- [`@deployinfra/azure`](../packages/azure) — App Service Kudu OneDeploy
+
+Each has msw (and SDK-mock where needed) tests plus an opt-in `e2e/<provider>.ts` gated on `DEPLOYINFRA_E2E_*`. No core changes are required unless the shared `Provider` contract itself grows (then bump `specificationVersion`).

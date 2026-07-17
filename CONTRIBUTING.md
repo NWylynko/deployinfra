@@ -33,6 +33,9 @@ Opt-in scripts under `e2e/` skip unless a token env var is set:
 | `pnpm e2e:netlify` | `DEPLOYINFRA_E2E_NETLIFY_TOKEN` (+ optional `…_SITE_ID`, `…_SITE_NAME`) |
 | `pnpm e2e:cloudflare` | `DEPLOYINFRA_E2E_CLOUDFLARE_TOKEN`, `…_ACCOUNT_ID` (+ optional `…_PROJECT`) |
 | `pnpm e2e:railway` | `DEPLOYINFRA_E2E_RAILWAY_TOKEN` (+ optional project/env/service ids) |
+| `pnpm e2e:aws` | `DEPLOYINFRA_E2E_AWS_REGION` (+ optional `…_APP_ID` / `…_APP_NAME` / `…_BRANCH`; AWS default credential chain) |
+| `pnpm e2e:firebase` | `DEPLOYINFRA_E2E_FIREBASE_SERVICE_ACCOUNT`, `…_PROJECT_ID` (+ optional `…_SITE_ID`) |
+| `pnpm e2e:azure` | `DEPLOYINFRA_E2E_AZURE_APP_NAME` + publish profile (`…_PUBLISH_USER`/`…_PUBLISH_PASSWORD`) or Entra (`…_TENANT_ID`/`…_CLIENT_ID`/`…_CLIENT_SECRET`); optional `…_SCM_HOST`, `…_APP_URL`, `…_SLOT` |
 
 Each script deploys `e2e/fixture-site`, asserts `status === 'ready'`, fetches the URL, and cleans up when the provider supports deletion.
 

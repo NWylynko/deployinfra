@@ -1,0 +1,32 @@
+import {
+  createFirebaseProvider,
+  type FirebaseDeployOptions,
+  type FirebaseOptions,
+} from './provider.js'
+
+export type { FirebaseOptions, FirebaseDeployOptions }
+export { createFirebaseProvider }
+export { mapFirebaseVersionStatus } from './status.js'
+
+export const name = 'firebase' as const
+
+/**
+ * Create a Firebase Hosting provider for use with `createDeployer`.
+ *
+ * Uploads gzipped files via the Hosting REST API (v1beta1). Pass `projectId`
+ * (and optional `siteId`) on `deploy()` — not on the factory.
+ *
+ * @example
+ * ```ts
+ * import { createDeployer } from '@deployinfra/sdk'
+ * import { firebase } from '@deployinfra/firebase'
+ *
+ * const deployer = createDeployer({
+ *   provider: firebase(), // ADC, or firebase({ serviceAccount })
+ * })
+ * await deployer.deploy('./dist', { projectId: 'my-project' })
+ * ```
+ */
+export function firebase(options: FirebaseOptions = {}) {
+  return createFirebaseProvider(options)
+}

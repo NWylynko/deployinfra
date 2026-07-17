@@ -1,0 +1,65 @@
+{
+  "name": "@deployinfra/azure",
+  "version": "0.0.0",
+  "description": "Azure App Service provider for DeployInfra — Kudu OneDeploy zip publish.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deployinfra/deploy-sdk.git",
+    "directory": "packages/azure"
+  },
+  "homepage": "https://github.com/deployinfra/deploy-sdk/tree/main/packages/azure#readme",
+  "bugs": {
+    "url": "https://github.com/deployinfra/deploy-sdk/issues"
+  },
+  "keywords": [
+    "deploy",
+    "deployment",
+    "azure",
+    "app-service",
+    "kudu",
+    "hosting",
+    "sdk",
+    "deployinfra"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "msw": "^2.15.0",
+    "tsdown": "^0.22.9",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@azure/identity": "^4.10.2",
+    "@deployinfra/sdk": "workspace:*",
+    "fflate": "^0.8.3"
+  }
+}

@@ -16,12 +16,18 @@
     "e2e:netlify": "pnpm exec tsx e2e/netlify.ts",
     "e2e:cloudflare": "pnpm exec tsx e2e/cloudflare.ts",
     "e2e:railway": "pnpm exec tsx e2e/railway.ts",
+    "e2e:aws": "pnpm exec tsx e2e/aws.ts",
+    "e2e:firebase": "pnpm exec tsx e2e/firebase.ts",
+    "e2e:azure": "pnpm exec tsx e2e/azure.ts",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.1",
+    "@deployinfra/aws": "workspace:*",
+    "@deployinfra/azure": "workspace:*",
     "@deployinfra/cloudflare": "workspace:*",
+    "@deployinfra/firebase": "workspace:*",
     "@deployinfra/sdk": "workspace:*",
     "@deployinfra/netlify": "workspace:*",
     "@deployinfra/railway": "workspace:*",
