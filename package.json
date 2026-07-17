@@ -25,7 +25,6 @@
     "@deployinfra/firebase": "workspace:*",
     "@deployinfra/sdk": "workspace:*",
     "@deployinfra/netlify": "workspace:*",
-    "@deployinfra/railway": "workspace:*",
     "@deployinfra/vercel": "workspace:*",
     "@types/node": "^26.1.1",
     "fflate": "^0.8.3",

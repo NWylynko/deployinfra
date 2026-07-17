@@ -19,7 +19,7 @@ This example deploys `site/` through any implemented provider.
 
    ```sh
    pnpm example -- vercel
-   # or: netlify, cloudflare, railway
+   # or: netlify, cloudflare
    ```
 
 You can also set `DEPLOY_PROVIDER` in `.env` and run `pnpm example` without
@@ -30,6 +30,3 @@ Set `DEPLOY_NAME` to pass `deploy({ name })` for any provider. The
 provider-specific `VERCEL_PROJECT_NAME`, `NETLIFY_SITE_NAME`, and
 `CLOUDFLARE_PROJECT_NAME` variables are fallback names; when none is set,
 DeployInfra generates a name.
-
-Railway uses `site/server.mjs` as a minimal web server. The other providers
-serve `site/index.html` as a static asset.

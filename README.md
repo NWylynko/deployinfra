@@ -1,6 +1,6 @@
 # DeployInfra
 
-One API to deploy to Vercel, Netlify, Cloudflare Pages, Railway, AWS Amplify,
+One API to deploy to Vercel, Netlify, Cloudflare Pages, AWS Amplify,
 and Firebase Hosting.
 
 ```ts
@@ -19,7 +19,7 @@ const result = await deployer.deploy('./dist', { name: 'my-app' })
 
 ```bash
 pnpm add @deployinfra/sdk @deployinfra/vercel
-# or: @deployinfra/netlify | @deployinfra/cloudflare | @deployinfra/railway
+# or: @deployinfra/netlify | @deployinfra/cloudflare
 # or: @deployinfra/aws | @deployinfra/firebase
 ```
 
@@ -32,17 +32,16 @@ Requires **Node.js ≥ 22.12**.
 | [`@deployinfra/vercel`](./packages/vercel) | Access token | Optional `teamId`. GitHub deploy needs the Vercel GitHub app (else archive fallback). |
 | [`@deployinfra/netlify`](./packages/netlify) | Personal access token | Pass `siteId` or `name` on `deploy()`. Zip passthrough supported. |
 | [`@deployinfra/cloudflare`](./packages/cloudflare) | API token (**Pages Write**) + account id | Wrangler-compatible direct upload. |
-| [`@deployinfra/railway`](./packages/railway) | Prefer a **project token** | Builds what you send — static dirs need a server. |
 | [`@deployinfra/aws`](./packages/aws) | AWS credential chain / explicit keys | Amplify Hosting manual zip deploy. Pass `appId` or `name` on `deploy()`. |
 | [`@deployinfra/firebase`](./packages/firebase) | ADC or service account | Firebase Hosting REST (`v1beta1`). Pass `projectId` on `deploy()`. |
 
 ## Capability matrix
 
-| Source | Vercel | Netlify | Cloudflare Pages | Railway | AWS Amplify | Firebase Hosting |
-|---|---|---|---|---|---|---|
-| dir | native (sha1 upload) | native (digest deploy) | native (direct upload) | native (tar.gz `/up`) | zip (fflate) | gzip + sha256 |
-| zip | core unzips | **zip passthrough** | core unzips | core unzips → re-tars | **zip passthrough** | core unzips |
-| github | native `gitSource` (needs GH app) or archive | archive | archive | serviceCreate (needs GH app) or archive | archive | archive |
+| Source | Vercel | Netlify | Cloudflare Pages | AWS Amplify | Firebase Hosting |
+|---|---|---|---|---|---|
+| dir | native (sha1 upload) | native (digest deploy) | native (direct upload) | zip (fflate) | gzip + sha256 |
+| zip | core unzips | **zip passthrough** | core unzips | **zip passthrough** | core unzips |
+| github | native `gitSource` (needs GH app) or archive | archive | archive | archive | archive |
 
 ## Quickstart
 

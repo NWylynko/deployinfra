@@ -17,7 +17,7 @@ export interface ProviderAdapter {
   enabled: boolean
   skipReason?: string
   timeoutMs: number
-  /** When false, skip HTTP content marker check (unused; Railway fixture serves marker). */
+  /** When false, skip HTTP content marker check. */
   assertLive?: boolean
   createTracked: () => TrackedProvider
 }
@@ -39,7 +39,6 @@ export async function loadAdapters(): Promise<ProviderAdapter[]> {
     await vercelAdapter(),
     await netlifyAdapter(),
     await cloudflareAdapter(),
-    await railwayAdapter(),
     await awsAdapter(),
     await firebaseAdapter(),
   ]
@@ -140,46 +139,6 @@ async function cloudflareAdapter(): Promise<ProviderAdapter> {
         async cleanup() {
           if (created) {
             await provider.deleteProject(projectName)
-          }
-        },
-      }
-    },
-  }
-}
-
-async function railwayAdapter(): Promise<ProviderAdapter> {
-  const name = 'railway'
-  if (!providerEnabled(name)) return disabled(name, 'filtered out')
-  const token = env('DEPLOYINFRA_E2E_RAILWAY_TOKEN')
-  if (!token) return disabled(name, 'set DEPLOYINFRA_E2E_RAILWAY_TOKEN')
-
-  const { railway } = await import('@deployinfra/railway')
-  const reuseProjectId = env('DEPLOYINFRA_E2E_RAILWAY_PROJECT_ID')
-  const environmentId = env('DEPLOYINFRA_E2E_RAILWAY_ENVIRONMENT_ID')
-  const serviceId = env('DEPLOYINFRA_E2E_RAILWAY_SERVICE_ID')
-
-  return {
-    name,
-    enabled: true,
-    timeoutMs: 12 * 60_000,
-    createTracked() {
-      const provider = railway({ token })
-      let projectId = reuseProjectId
-      const created = !reuseProjectId
-      return {
-        provider,
-        deployOptions: () => ({
-          name: uniqueSlug('di-e2e'),
-          projectId,
-          environmentId,
-          serviceId,
-        }),
-        onStatus(r) {
-          if (r.projectId) projectId = r.projectId
-        },
-        async cleanup() {
-          if (created && projectId) {
-            await provider.deleteProject(projectId)
           }
         },
       }

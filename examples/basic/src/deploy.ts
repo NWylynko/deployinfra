@@ -1,7 +1,6 @@
 import { createDeployer } from '@deployinfra/sdk'
 import { cloudflare } from '@deployinfra/cloudflare'
 import { netlify } from '@deployinfra/netlify'
-import { railway } from '@deployinfra/railway'
 import { vercel } from '@deployinfra/vercel'
 import { writeFile } from 'node:fs/promises'
 
@@ -18,10 +17,6 @@ async function main(): Promise<void> {
 
   const netlifyProvider = netlify({
     token: "...",
-  })
-
-  const railwayProvider = railway({
-    token: '...'
   })
 
   const deployer = createDeployer({

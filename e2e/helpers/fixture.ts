@@ -28,8 +28,6 @@ export async function createFixture(): Promise<E2eFixture> {
 
   const files: Record<string, string> = {
     'index.html': indexHtml,
-    'package.json': await readFile(join(dirPath, 'package.json'), 'utf8'),
-    'server.mjs': await readFile(join(dirPath, 'server.mjs'), 'utf8'),
   }
 
   const zipBytes = zipSync(

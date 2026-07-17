@@ -48,7 +48,6 @@ pnpm test:e2e:full     # full matrix: dir, files, zip, zip-url, github × provid
 | Vercel | `DEPLOYINFRA_E2E_VERCEL_TOKEN` | `…_TEAM_ID`, `…_PROJECT` (reuse; skips project delete) |
 | Netlify | `DEPLOYINFRA_E2E_NETLIFY_TOKEN` | `…_SITE_ID` (reuse; skips site delete) |
 | Cloudflare | `…_CLOUDFLARE_TOKEN`, `…_ACCOUNT_ID` | `…_PROJECT` (reuse) |
-| Railway | `…_RAILWAY_TOKEN` | `…_PROJECT_ID` / `…_ENVIRONMENT_ID` / `…_SERVICE_ID` (reuse) |
 | AWS | `…_AWS_REGION` + AWS default credential chain | `…_APP_ID`, `…_BRANCH` |
 | Firebase | `…_FIREBASE_PROJECT_ID` (+ `…_SERVICE_ACCOUNT` or ADC) | `…_SITE_ID` (reuse default/shared site) |
 
@@ -63,7 +62,7 @@ Full profile deploys a public GitHub repo at **repository root** (the SDK strips
 | `DEPLOYINFRA_E2E_GITHUB_REF` | (default branch) |
 | `DEPLOYINFRA_E2E_GITHUB_ROOT` | unset — if set, contract tests document that subdirectory selection is unsupported |
 
-Create a public repo whose root matches `e2e/fixtures/site` (`index.html` with `deployinfra-ok`, plus `package.json` / `server.mjs` for Railway).
+Create a public repo whose root matches `e2e/fixtures/site` (`index.html` with `deployinfra-ok`).
 
 ### Teardown
 
@@ -72,7 +71,6 @@ By default the suite creates disposable names/ids and cascade-deletes:
 - Vercel → `deleteProject`
 - Netlify → `deleteSite`
 - Cloudflare → `deleteProject`
-- Railway → `deleteProject` (account/team token)
 - AWS → `deleteApp` (or `deleteBranch` when reusing an app)
 - Firebase → `deleteSite` for non-default sites; otherwise best-effort version delete (cannot unpublish)
 

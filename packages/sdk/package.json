@@ -25,7 +25,8 @@
     "vercel",
     "netlify",
     "cloudflare",
-    "railway"
+    "aws",
+    "firebase"
   ],
   "publishConfig": {
     "access": "public"

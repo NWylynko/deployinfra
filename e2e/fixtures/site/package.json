@@ -1,8 +1,0 @@
-{
-  "name": "deployinfra-e2e-fixture",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "node server.mjs"
-  }
-}

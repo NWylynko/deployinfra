@@ -10,7 +10,6 @@
     "@deployinfra/cloudflare": "workspace:*",
     "@deployinfra/sdk": "workspace:*",
     "@deployinfra/netlify": "workspace:*",
-    "@deployinfra/railway": "workspace:*",
     "@deployinfra/vercel": "workspace:*"
   },
   "devDependencies": {
