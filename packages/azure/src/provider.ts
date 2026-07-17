@@ -29,8 +29,15 @@ const MAX_ZIP_BYTES = 2 * 1024 * 1024 * 1024
  *
  * Requires a **pre-existing** App Service web app (`az webapp up` or portal).
  * This provider does not provision resource groups, plans, or SKUs.
+ *
+ * **Credentials:** either a publish profile (App Service → Get publish profile)
+ * or Entra (`kind: 'entra'`) — see {@link AzureCredentials}.
  */
 export interface AzureOptions {
+  /**
+   * Publish-profile basic auth or Entra credentials.
+   * @see AzureCredentials
+   */
   credentials: AzureCredentials
   /**
    * Override SCM host (without scheme), e.g. `myapp.scm.azurewebsites.net`.

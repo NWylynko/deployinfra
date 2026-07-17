@@ -23,6 +23,13 @@ export const name = 'azure' as const
  * Publishes a zip via Kudu OneDeploy (`/api/publish?type=zip&async=true`).
  * Requires a pre-existing web app — pass `appName` on `deploy()`.
  *
+ * **Credentials:**
+ * - **Publish profile:** Azure portal → App Service → **Get publish profile**
+ *   (username/password from the Zip Deploy / MSDeploy entry).
+ * - **Entra:** register an app at
+ *   {@link https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade | App registrations},
+ *   create a client secret, grant Website Contributor (or similar) on the web app.
+ *
  * @example
  * ```ts
  * import { createDeployer } from '@deployinfra/sdk'

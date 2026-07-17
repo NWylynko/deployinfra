@@ -5,12 +5,33 @@ import {
 
 export const DEFAULT_ENTRA_SCOPE = 'https://appservice.azure.com/.default'
 
+/**
+ * SCM basic auth from an App Service **publish profile**.
+ *
+ * Download it in the Azure portal: App Service → your web app →
+ * **Get publish profile** (or `az webapp deployment list-publishing-profiles`).
+ * Use the `userName` / `userPWD` from an MSDeploy / Zip Deploy profile entry.
+ *
+ * @see https://learn.microsoft.com/azure/app-service/deploy-ftp#get-ftp-ftp-credentials
+ */
 export interface PublishProfileCredentials {
   kind: 'publishProfile'
   username: string
   password: string
 }
 
+/**
+ * Entra (Azure AD) app registration client-secret credentials.
+ *
+ * Create an app at
+ * {@link https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade | App registrations},
+ * add a client secret under **Certificates & secrets**, and grant the app
+ * access to the web app (e.g. Website Contributor on the App Service resource).
+ * Then request tokens for `https://appservice.azure.com/.default` (or set
+ * `entraScope` on the provider).
+ *
+ * @see https://learn.microsoft.com/entra/identity-platform/quickstart-register-app
+ */
 export interface EntraClientSecretCredentials {
   kind: 'entra'
   tenantId: string
@@ -18,6 +39,10 @@ export interface EntraClientSecretCredentials {
   clientSecret: string
 }
 
+/**
+ * Entra credentials via any `@azure/identity` {@link TokenCredential}
+ * (e.g. `DefaultAzureCredential` after `az login`).
+ */
 export interface EntraTokenCredentialCredentials {
   kind: 'entra'
   /** Any `@azure/identity` `TokenCredential` (e.g. `DefaultAzureCredential`). */
