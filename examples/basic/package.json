@@ -1,0 +1,21 @@
+{
+  "name": "deployinfra-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "node --env-file-if-exists=.env --import tsx src/deploy.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@deployinfra/cloudflare": "workspace:*",
+    "@deployinfra/sdk": "workspace:*",
+    "@deployinfra/netlify": "workspace:*",
+    "@deployinfra/railway": "workspace:*",
+    "@deployinfra/vercel": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.3"
+  }
+}

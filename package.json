@@ -1,0 +1,34 @@
+{
+  "name": "deployinfra",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.12.4",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "example": "pnpm --filter deployinfra-example run deploy --",
+    "e2e:vercel": "pnpm exec tsx e2e/vercel.ts",
+    "e2e:netlify": "pnpm exec tsx e2e/netlify.ts",
+    "e2e:cloudflare": "pnpm exec tsx e2e/cloudflare.ts",
+    "e2e:railway": "pnpm exec tsx e2e/railway.ts",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.1",
+    "@deployinfra/cloudflare": "workspace:*",
+    "@deployinfra/sdk": "workspace:*",
+    "@deployinfra/netlify": "workspace:*",
+    "@deployinfra/railway": "workspace:*",
+    "@deployinfra/vercel": "workspace:*",
+    "@types/node": "^26.1.1",
+    "tsx": "^4.20.5",
+    "turbo": "^2.10.5",
+    "typescript": "^5.9.3"
+  }
+}
